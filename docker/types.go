@@ -12,8 +12,8 @@ type ContainerConfig struct {
 	Image      string        // Image which will be used for running code
 	LocalImage bool          // Set to true if image shouldn't be pulled from the outside
 	Cmd        []string      // Defines what will be run when container starts. Use "..." as name of the file
-	Time       time.Duration // Max time for the code to execute
-	MemoryMB   int64         // Max amount of memory for the container
+	Time       time.Duration // Max time for the code to execute FIXME: Unused in code
+	MemoryMB   int64         // Max amount of memory for the container FIXME: Unused in code
 }
 
 // ContainerFile describes what file the container should execute
