@@ -44,6 +44,7 @@ func (c *Controller) EnsureImage(config *ContainerConfig) error {
 	}
 	defer reader.Close()
 
+	// TODO: These 4 lines are unused
 	_, err = io.Copy(os.Stdout, reader)
 	if err != nil {
 		return fmt.Errorf("error coping reader to stdout: %w", err)
@@ -146,37 +147,37 @@ func (c *Controller) ContainerRemove(id string) error {
 }
 
 // Run creates, runs and removes container defined by the ContainerConfig
-func (c *Controller) Run(config *ContainerConfig, volumes []VolumeMount) (statusCode int64, body string, err error) {
+func (c *Controller) Run(config *ContainerConfig, volumes []VolumeMount) (statusCode int64, logs string, err error) {
 	// TODO: Create custom errors for this
 
 	// Pulls image if needed
 	err = c.EnsureImage(config)
 	if err != nil {
-		return statusCode, body, err
+		return statusCode, logs, err
 	}
 
 	// Create the container
 	id, err := c.ContainerCreate(config, volumes)
 	if err != nil {
-		return statusCode, body, err
+		return statusCode, logs, err
 	}
 
 	// Run the container
 	err = c.ContainerStart(id)
 	if err != nil {
-		return statusCode, body, err
+		return statusCode, logs, err
 	}
 
 	// Wait for it to finish
 	statusCode, err = c.ContainerWait(id)
 	if err != nil {
-		return statusCode, body, err
+		return statusCode, logs, err
 	}
 
 	// Get the log
-	body, err = c.ContainerLog(id)
+	logs, err = c.ContainerLog(id)
 	if err != nil {
-		return statusCode, body, err
+		return statusCode, logs, err
 	}
 
 	// Remove the container
@@ -185,10 +186,10 @@ func (c *Controller) Run(config *ContainerConfig, volumes []VolumeMount) (status
 		Force:         true,
 	})
 	if err != nil {
-		return statusCode, body, fmt.Errorf("unable to remove container %q: %w", id, err)
+		return statusCode, logs, fmt.Errorf("unable to remove container %q: %w", id, err)
 	}
 
-	return statusCode, body, err
+	return statusCode, logs, err
 }
 
 // generateContainerName generates unique name for each new container
