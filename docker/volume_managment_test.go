@@ -7,7 +7,7 @@ import (
 )
 
 func TestVolumeLifecycle(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}

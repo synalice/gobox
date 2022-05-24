@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
 	"time"
 
 	"github.com/docker/docker/api/types"
@@ -21,8 +20,13 @@ import (
 )
 
 // NewController returns controller that wll be used for running methods off of it
-func NewController() (c *Controller, err error) {
-	c = new(Controller)
+func NewController(config *ContainerConfig) (c *controller, err error) {
+	c = &controller{
+		cli:        nil,
+		image:      config.Image,
+		localImage: config.LocalImage,
+		cmd:        config.Cmd,
+	}
 
 	c.cli, err = client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -33,28 +37,28 @@ func NewController() (c *Controller, err error) {
 }
 
 // EnsureImage pulls images from docker hub to make sure in exists
-func (c *Controller) EnsureImage(config *ContainerConfig) error {
-	if config.LocalImage {
+func (c *controller) EnsureImage(imageName string) error {
+	if c.localImage {
 		return nil
 	}
 
-	reader, err := c.cli.ImagePull(context.Background(), config.Image, types.ImagePullOptions{})
+	reader, err := c.cli.ImagePull(context.Background(), imageName, types.ImagePullOptions{})
 	if err != nil {
 		return fmt.Errorf("error while executing c.cli.ImagePull(): %w", err)
 	}
 	defer reader.Close()
 
-	// TODO: These 4 lines are unused
-	_, err = io.Copy(os.Stdout, reader)
-	if err != nil {
-		return fmt.Errorf("error coping reader to stdout: %w", err)
-	}
+	// FIXME: These 4 lines are unused
+	//_, err = io.Copy(os.Stdout, reader)
+	//if err != nil {
+	//	return fmt.Errorf("error coping reader to stdout: %w", err)
+	//}
 
 	return nil
 }
 
 // ContainerCreate creates a container
-func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMount) (id string, err error) {
+func (c *controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMount) (containerID string, err error) {
 	hostConfig := container.HostConfig{}
 	networkingConfig := network.NetworkingConfig{}
 	platform := v1.Platform{}
@@ -92,7 +96,7 @@ func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMo
 }
 
 // ContainerStart starts a container
-func (c *Controller) ContainerStart(containerID string) error {
+func (c *controller) ContainerStart(containerID string) error {
 	err := c.cli.ContainerStart(context.Background(), containerID, types.ContainerStartOptions{})
 	if err != nil {
 		return fmt.Errorf("error while executing c.cli.ContainerStart(): %w", err)
@@ -102,8 +106,8 @@ func (c *Controller) ContainerStart(containerID string) error {
 }
 
 // ContainerWait waits until the container is stopped
-func (c *Controller) ContainerWait(id string) (state int64, err error) {
-	resultC, errC := c.cli.ContainerWait(context.Background(), id, "not-running")
+func (c *controller) ContainerWait(containerID string) (state int64, err error) {
+	resultC, errC := c.cli.ContainerWait(context.Background(), containerID, "not-running")
 	select {
 	case err := <-errC:
 		return 0, err
@@ -113,11 +117,11 @@ func (c *Controller) ContainerWait(id string) (state int64, err error) {
 }
 
 // ContainerLog returns logs of a specific container
-func (c *Controller) ContainerLog(id string) (string, error) {
+func (c *controller) ContainerLog(containerID string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	reader, err := c.cli.ContainerLogs(ctx, id, types.ContainerLogsOptions{
+	reader, err := c.cli.ContainerLogs(ctx, containerID, types.ContainerLogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 	})
@@ -134,8 +138,8 @@ func (c *Controller) ContainerLog(id string) (string, error) {
 }
 
 // ContainerRemove removes a container
-func (c *Controller) ContainerRemove(id string) error {
-	err := c.cli.ContainerRemove(context.Background(), id, types.ContainerRemoveOptions{
+func (c *controller) ContainerRemove(containerID string) error {
+	err := c.cli.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{
 		RemoveVolumes: true,
 		Force:         true,
 	})
@@ -147,11 +151,11 @@ func (c *Controller) ContainerRemove(id string) error {
 }
 
 // Run creates, runs and removes container defined by the ContainerConfig
-func (c *Controller) Run(config *ContainerConfig, volumes []VolumeMount) (statusCode int64, logs string, err error) {
+func (c *controller) Run(config *ContainerConfig, volumes []VolumeMount) (statusCode int64, logs string, err error) {
 	// TODO: Create custom errors for this
 
 	// Pulls image if needed
-	err = c.EnsureImage(config)
+	err = c.EnsureImage(config.Image)
 	if err != nil {
 		return statusCode, logs, err
 	}

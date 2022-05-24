@@ -16,7 +16,7 @@ var config = docker.ContainerConfig{
 }
 
 func TestNewController(t *testing.T) {
-	_, err := docker.NewController()
+	_, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
@@ -24,19 +24,19 @@ func TestNewController(t *testing.T) {
 }
 
 func TestEnsureImage(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = c.EnsureImage(&config)
+	err = c.EnsureImage(config.Image)
 	if err != nil {
 		t.Error(err)
 	}
 }
 
 func TestContainerCreate(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}
@@ -48,7 +48,7 @@ func TestContainerCreate(t *testing.T) {
 }
 
 func TestContainerStart(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}
@@ -60,7 +60,7 @@ func TestContainerStart(t *testing.T) {
 }
 
 func TestContainerWait(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}
@@ -72,7 +72,7 @@ func TestContainerWait(t *testing.T) {
 }
 
 func TestContainerLog(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}
@@ -84,7 +84,7 @@ func TestContainerLog(t *testing.T) {
 }
 
 func TestContainerRemove(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}
@@ -96,7 +96,7 @@ func TestContainerRemove(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := docker.NewController(&config)
 	if err != nil {
 		t.Error(err)
 	}
