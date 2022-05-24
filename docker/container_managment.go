@@ -59,7 +59,11 @@ func (c *controller) EnsureImage(imageName string) error {
 
 // ContainerCreate creates a container
 func (c *controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMount) (containerID string, err error) {
-	hostConfig := container.HostConfig{}
+	hostConfig := container.HostConfig{
+		Resources: container.Resources{
+			Memory: config.MemoryMB * 1024 * 1024,
+		},
+	}
 	networkingConfig := network.NetworkingConfig{}
 	platform := v1.Platform{}
 
