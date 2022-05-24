@@ -77,10 +77,11 @@ func TestContainerLog(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, err = c.ContainerLog(id)
+	data, err := c.ContainerLog(id)
 	if err != nil {
 		t.Error(err)
 	}
+	fmt.Println(data)
 }
 
 func TestContainerRemove(t *testing.T) {
@@ -101,8 +102,9 @@ func TestRun(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, _, err = c.Run([]docker.VolumeMount{})
+	_, logs, err := c.Run([]docker.VolumeMount{})
 	if err != nil {
 		t.Error(err)
 	}
+	fmt.Println(logs)
 }
