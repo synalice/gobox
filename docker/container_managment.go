@@ -171,6 +171,14 @@ func (c *Controller) Run(volumes []VolumeMount) (statusCode int64, logs string, 
 		return statusCode, logs, err
 	}
 
+	// Remove the container
+	defer func(c *Controller, containerID string) {
+		err := c.ContainerRemove(containerID)
+		if err != nil {
+			panic("couldn't remove container")
+		}
+	}(c, id)
+
 	// Start the container
 	err = c.ContainerStart(id)
 	if err != nil {
@@ -187,15 +195,6 @@ func (c *Controller) Run(volumes []VolumeMount) (statusCode int64, logs string, 
 	logs, err = c.ContainerLog(id)
 	if err != nil {
 		return statusCode, logs, err
-	}
-
-	// Remove the container
-	err = c.cli.ContainerRemove(context.Background(), id, types.ContainerRemoveOptions{
-		RemoveVolumes: true,
-		Force:         true,
-	})
-	if err != nil {
-		return statusCode, logs, fmt.Errorf("unable to remove container %q: %w", id, err)
 	}
 
 	return statusCode, logs, err
