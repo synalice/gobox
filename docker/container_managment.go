@@ -108,8 +108,11 @@ func (c *Controller) ContainerStart(containerID string) error {
 }
 
 // ContainerWait waits until the container is stopped
-func (c *controller) ContainerWait(containerID string) (state int64, err error) {
-	resultC, errC := c.cli.ContainerWait(context.Background(), containerID, "not-running")
+func (c *Controller) ContainerWait(containerID string, timeLimit time.Duration) (state int64, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeLimit)
+	defer cancel()
+
+	resultC, errC := c.cli.ContainerWait(ctx, containerID, "")
 	select {
 	case err := <-errC:
 		return 0, err

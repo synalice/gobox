@@ -1,7 +1,9 @@
 package docker_test
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/synalice/gobox/docker"
 )
@@ -11,7 +13,7 @@ var config = docker.ContainerConfig{
 	Image:      "python",
 	LocalImage: false,
 	Cmd:        []string{"python"},
-	Time:       3,
+	TimeLimit:  2 * time.Second,
 	MemoryMB:   64,
 }
 
@@ -65,7 +67,7 @@ func TestContainerWait(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, err = c.ContainerWait(id)
+	_, err = c.ContainerWait(id, config.TimeLimit)
 	if err != nil {
 		t.Error(err)
 	}
