@@ -10,7 +10,7 @@ import (
 )
 
 // FindVolume finds a specified volume
-func (c *controller) FindVolume(name string) (volume *types.Volume, err error) {
+func (c *Controller) FindVolume(name string) (volume *types.Volume, err error) {
 	volumes, err := c.cli.VolumeList(context.Background(), filters.NewArgs())
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func (c *controller) FindVolume(name string) (volume *types.Volume, err error) {
 }
 
 // EnsureVolume makes sure specified volume exists and creates it if it doesn't
-func (c *controller) EnsureVolume(name string) (created bool, volume *types.Volume, err error) {
+func (c *Controller) EnsureVolume(name string) (created bool, volume *types.Volume, err error) {
 	volume, err = c.FindVolume(name)
 	if err != nil {
 		return false, nil, err
@@ -44,7 +44,7 @@ func (c *controller) EnsureVolume(name string) (created bool, volume *types.Volu
 }
 
 // RemoveVolume removes specified volume
-func (c *controller) RemoveVolume(name string) (removed bool, err error) {
+func (c *Controller) RemoveVolume(name string) (removed bool, err error) {
 	vol, err := c.FindVolume(name)
 	if err != nil {
 		return false, err

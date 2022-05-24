@@ -23,16 +23,9 @@ type ContainerFile struct {
 }
 
 // Controller is an object that wll be used for running methods off of it
-type controller struct {
-	cli        *client.Client
-	image      string
-	localImage bool
-	cmd        []string
-}
-
-type limits struct {
-	time     time.Duration
-	memoryMB int64
+type Controller struct {
+	cli    *client.Client
+	config *ContainerConfig
 }
 
 // VolumeMount TODO: Abstract volume creation and mounting away from user. This struct should be hidden

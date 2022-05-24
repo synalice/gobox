@@ -101,7 +101,7 @@ func TestRun(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, _, err = c.Run(&config, []docker.VolumeMount{})
+	_, _, err = c.Run([]docker.VolumeMount{})
 	if err != nil {
 		t.Error(err)
 	}
