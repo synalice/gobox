@@ -26,7 +26,7 @@ func (c *Controller) FindVolume(name string) (volume *types.Volume, err error) {
 }
 
 // EnsureVolume makes sure specified volume exists and creates it if it doesn't
-func (c *Controller) EnsureVolume(name string) (created bool, volume *types.Volume, err error) {
+func (c *Controller) EnsureVolume(name string) (new bool, volume *types.Volume, err error) {
 	volume, err = c.FindVolume(name)
 	if err != nil {
 		return false, nil, err

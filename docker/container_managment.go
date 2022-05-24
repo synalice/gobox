@@ -22,8 +22,9 @@ import (
 // NewController returns Controller that wll be used for running methods off of it
 func NewController(config *ContainerConfig) (c *Controller, err error) {
 	c = &Controller{
-		cli:    nil,
-		config: config,
+		cli:                    nil,
+		config:                 config,
+		volumeAndContainerName: generateUUIDName(config),
 	}
 
 	c.cli, err = client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
@@ -88,7 +89,7 @@ func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMo
 		&hostConfig,
 		&networkingConfig,
 		&platform,
-		generateContainerName(config),
+		c.volumeAndContainerName,
 	)
 	if err != nil {
 		return "", fmt.Errorf("error while executing c.cli.ContainerCreate(): %w", err)
@@ -200,7 +201,11 @@ func (c *Controller) Run(volumes []VolumeMount) (statusCode int64, logs string, 
 	return statusCode, logs, err
 }
 
-// generateContainerName generates unique name for each new container
-func generateContainerName(config *ContainerConfig) (containerName string) {
-	return "gobox" + "-" + config.Image + "-" + uuid.NewString()
+// generateUUIDName generates unique name for each new container
+func generateUUIDName(config *ContainerConfig) (containerName string) {
+	if config.ForBuild {
+		return "gobox" + "-" + "build" + "-" + config.Image + "-" + uuid.NewString()
+	} else {
+		return "gobox" + "-" + config.Image + "-" + uuid.NewString()
+	}
 }

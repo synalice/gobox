@@ -9,6 +9,7 @@ import (
 
 // ContainerConfig describes what configuration the container should have
 type ContainerConfig struct {
+	ForBuild   bool          // Determines if the config is meant to be used
 	Image      string        // Image which will be used for running code
 	LocalImage bool          // Set to true if image shouldn't be pulled from the outside
 	Cmd        []string      // Defines what will be run when container starts. Use "..." as a name of the file
@@ -24,8 +25,9 @@ type ContainerFile struct {
 
 // Controller is an object that wll be used for running methods off of it
 type Controller struct {
-	cli    *client.Client
-	config *ContainerConfig
+	cli                    *client.Client
+	config                 *ContainerConfig
+	volumeAndContainerName string // Used to sync names between volume and container
 }
 
 // VolumeMount TODO: Abstract volume creation and mounting away from user. This struct should be hidden
