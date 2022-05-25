@@ -8,7 +8,6 @@ import (
 	"github.com/synalice/gobox/docker"
 )
 
-var id string
 var config = docker.ContainerConfig{
 	Image:      "python",
 	LocalImage: false,
@@ -25,79 +24,6 @@ func TestNewController(t *testing.T) {
 	}
 }
 
-func TestEnsureImage(t *testing.T) {
-	c, err := docker.NewController(&config)
-	if err != nil {
-		t.Error(err)
-	}
-
-	err = c.EnsureImage(config.Image)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestContainerCreate(t *testing.T) {
-	c, err := docker.NewController(&config)
-	if err != nil {
-		t.Error(err)
-	}
-
-	id, err = c.ContainerCreate(&config, nil)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestContainerStart(t *testing.T) {
-	c, err := docker.NewController(&config)
-	if err != nil {
-		t.Error(err)
-	}
-
-	err = c.ContainerStart(id)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestContainerWait(t *testing.T) {
-	c, err := docker.NewController(&config)
-	if err != nil {
-		t.Error(err)
-	}
-
-	_, err = c.ContainerWait(id, config.TimeLimit)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestContainerLog(t *testing.T) {
-	c, err := docker.NewController(&config)
-	if err != nil {
-		t.Error(err)
-	}
-
-	data, err := c.ContainerLog(id)
-	if err != nil {
-		t.Error(err)
-	}
-	fmt.Println(data)
-}
-
-func TestContainerRemove(t *testing.T) {
-	c, err := docker.NewController(&config)
-	if err != nil {
-		t.Error(err)
-	}
-
-	err = c.ContainerRemove(id)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
 func TestRun(t *testing.T) {
 	c, err := docker.NewController(&config)
 	if err != nil {
@@ -106,7 +32,10 @@ func TestRun(t *testing.T) {
 
 	_, logs, err := c.Run()
 	if err != nil {
-		t.Error(err)
+		if err.Error() != "context deadline exceeded" {
+			t.Error(err)
+		}
+		fmt.Println("Container killed due to timeout")
 	}
 
 	fmt.Println(logs)
