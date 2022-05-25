@@ -97,20 +97,6 @@ func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMo
 	return resp.ID, nil
 }
 
-func setMultipleMounts(volumes []VolumeMount) []mount.Mount {
-	var mounts []mount.Mount
-
-	for _, volume := range volumes {
-		m := mount.Mount{
-			Type:   mount.TypeVolume,
-			Source: volume.Volume.Name,
-			Target: volume.HostPath,
-		}
-		mounts = append(mounts, m)
-	}
-	return mounts
-}
-
 // ContainerStart starts a container
 func (c *Controller) ContainerStart(containerID string) error {
 	err := c.cli.ContainerStart(context.Background(), containerID, types.ContainerStartOptions{})
@@ -230,11 +216,26 @@ func (c *Controller) Run() (statusCode int64, logs string, err error) {
 	return statusCode, logs, err
 }
 
-// generateUUIDName generates unique name for each new container
+// generateUUIDName generates unique names new containers and volumes
 func generateUUIDName(config *ContainerConfig) (containerName string) {
 	if config.ForBuild {
 		return "gobox" + "-" + "build" + "-" + config.Image + "-" + uuid.NewString()
 	} else {
 		return "gobox" + "-" + config.Image + "-" + uuid.NewString()
 	}
+}
+
+// setMultipleMounts is used for mounting multiple volumes
+func setMultipleMounts(volumes []VolumeMount) []mount.Mount {
+	var mounts []mount.Mount
+
+	for _, volume := range volumes {
+		m := mount.Mount{
+			Type:   mount.TypeVolume,
+			Source: volume.Volume.Name,
+			Target: volume.HostPath,
+		}
+		mounts = append(mounts, m)
+	}
+	return mounts
 }
