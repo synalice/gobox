@@ -27,10 +27,10 @@ type ContainerFile struct {
 type Controller struct {
 	cli                    *client.Client
 	config                 *ContainerConfig
-	volumeAndContainerName string // Used to sync names between volume and container
+	volumeAndContainerName string // The same for the container and volume. Is used to sync names between them
 }
 
-// VolumeMount TODO: Abstract volume creation and mounting away from user. This struct should be hidden
+// VolumeMount is used for specifying volumes for the container to mount
 type VolumeMount struct {
 	HostPath string
 	Volume   *types.Volume

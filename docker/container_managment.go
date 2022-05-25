@@ -68,11 +68,13 @@ func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMo
 
 	var mounts []mount.Mount
 
-	for _, volume := range volumes {
+	if volumes != nil {
+		mounts = setMultipleMounts(volumes)
+	} else {
 		m := mount.Mount{
 			Type:   mount.TypeVolume,
-			Source: volume.Volume.Name,
-			Target: volume.HostPath,
+			Source: c.volumeAndContainerName,
+			Target: "/userData",
 		}
 		mounts = append(mounts, m)
 	}
@@ -96,6 +98,20 @@ func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMo
 	}
 
 	return resp.ID, nil
+}
+
+func setMultipleMounts(volumes []VolumeMount) []mount.Mount {
+	var mounts []mount.Mount
+
+	for _, volume := range volumes {
+		m := mount.Mount{
+			Type:   mount.TypeVolume,
+			Source: volume.Volume.Name,
+			Target: volume.HostPath,
+		}
+		mounts = append(mounts, m)
+	}
+	return mounts
 }
 
 // ContainerStart starts a container
@@ -157,7 +173,7 @@ func (c *Controller) ContainerRemove(containerID string) error {
 }
 
 // Run creates, runs and removes container defined by the ContainerConfig
-func (c *Controller) Run(volumes []VolumeMount) (statusCode int64, logs string, err error) {
+func (c *Controller) Run() (statusCode int64, logs string, err error) {
 	// TODO: Create custom errors for this
 
 	// Pulls image if needed
@@ -167,7 +183,7 @@ func (c *Controller) Run(volumes []VolumeMount) (statusCode int64, logs string, 
 	}
 
 	// Create the container
-	id, err := c.ContainerCreate(c.config, volumes)
+	id, err := c.ContainerCreate(c.config, nil)
 	if err != nil {
 		return statusCode, logs, err
 	}

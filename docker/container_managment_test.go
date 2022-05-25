@@ -43,7 +43,7 @@ func TestContainerCreate(t *testing.T) {
 		t.Error(err)
 	}
 
-	id, err = c.ContainerCreate(&config, []docker.VolumeMount{})
+	id, err = c.ContainerCreate(&config, nil)
 	if err != nil {
 		t.Error(err)
 	}
@@ -104,7 +104,7 @@ func TestRun(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, logs, err := c.Run([]docker.VolumeMount{})
+	_, logs, err := c.Run()
 	if err != nil {
 		t.Error(err)
 	}
