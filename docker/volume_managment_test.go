@@ -22,8 +22,8 @@ func TestVolumeLifecycle(t *testing.T) {
 		t.Errorf("Should not have created the volume the second time")
 	}
 
-	removed, err := c.RemoveVolume("myVolume")
-	if removed != true {
+	err = c.RemoveVolume("myVolume")
+	if err != nil {
 		t.Errorf("Should have removed the volume")
 	}
 }

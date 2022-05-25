@@ -2,6 +2,7 @@ package docker
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
@@ -44,19 +45,19 @@ func (c *Controller) EnsureVolume(name string) (new bool, volume *types.Volume, 
 }
 
 // RemoveVolume removes specified volume
-func (c *Controller) RemoveVolume(name string) (removed bool, err error) {
+func (c *Controller) RemoveVolume(name string) error {
 	vol, err := c.FindVolume(name)
 	if err != nil {
-		return false, err
+		return fmt.Errorf("couldn't find volume: %w", err)
 	}
 	if vol == nil {
-		return false, nil
+		return nil
 	}
 
 	err = c.cli.VolumeRemove(context.Background(), name, true)
 	if err != nil {
-		return false, err
+		return fmt.Errorf("couldn't remove volume: %w", err)
 	}
 
-	return true, nil
+	return nil
 }

@@ -179,6 +179,21 @@ func (c *Controller) Run() (statusCode int64, logs string, err error) {
 		return statusCode, logs, err
 	}
 
+	// Create volume
+	_, _, err = c.EnsureVolume(c.volumeAndContainerName)
+	if err != nil {
+		return statusCode, logs, err
+	}
+
+	// Remove volume
+	defer func(c *Controller, name string) {
+		err := c.RemoveVolume(name)
+		if err != nil {
+			// TODO: remove this panic
+			panic(err)
+		}
+	}(c, c.volumeAndContainerName)
+
 	// Create the container
 	id, err := c.ContainerCreate(c.config, nil)
 	if err != nil {
