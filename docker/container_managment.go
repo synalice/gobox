@@ -1,6 +1,3 @@
-// TODO: Add time limit setting for each new container
-// TODO: Add graceful shutdown
-
 package docker
 
 import (
@@ -192,7 +189,8 @@ func (c *Controller) Run() (statusCode int64, logs string, err error) {
 	defer func(c *Controller, containerID string) {
 		err := c.ContainerRemove(containerID)
 		if err != nil {
-			panic("couldn't remove container")
+			// TODO: remove this panic
+			panic(err)
 		}
 	}(c, id)
 
