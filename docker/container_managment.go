@@ -44,12 +44,6 @@ func (c *Controller) EnsureImage(imageName string) error {
 	}
 	defer reader.Close()
 
-	// FIXME: These 4 lines are unused
-	//_, err = io.Copy(os.Stdout, reader)
-	//if err != nil {
-	//	return fmt.Errorf("error coping reader to stdout: %w", err)
-	//}
-
 	return nil
 }
 
