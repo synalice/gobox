@@ -13,7 +13,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/google/uuid"
 
-	v1 "github.com/opencontainers/image-spec/specs-go/v1"
+	"github.com/opencontainers/image-spec/specs-go/v1"
 )
 
 // NewController returns Controller that wll be used for running methods off of it
@@ -48,10 +48,15 @@ func (c *Controller) EnsureImage(imageName string) error {
 }
 
 // ContainerCreate creates a container
-func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMount) (containerID string, err error) {
+func (c *Controller) ContainerCreate(userConfig *ContainerConfig, volumes []VolumeMount) (containerID string, err error) {
+	config := container.Config{
+		Tty:   true,
+		Image: userConfig.Image,
+		Cmd:   userConfig.Cmd,
+	}
 	hostConfig := container.HostConfig{
 		Resources: container.Resources{
-			Memory: config.MemoryMB * 1024 * 1024,
+			Memory: userConfig.MemoryMB * 1024 * 1024,
 		},
 	}
 	networkingConfig := network.NetworkingConfig{}
@@ -74,11 +79,7 @@ func (c *Controller) ContainerCreate(config *ContainerConfig, volumes []VolumeMo
 
 	resp, err := c.cli.ContainerCreate(
 		context.Background(),
-		&container.Config{
-			Tty:   true,
-			Image: config.Image,
-			Cmd:   config.Cmd,
-		},
+		&config,
 		&hostConfig,
 		&networkingConfig,
 		&platform,
