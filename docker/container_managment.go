@@ -7,13 +7,7 @@ import (
 	"time"
 
 	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/container"
-	"github.com/docker/docker/api/types/mount"
-	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
-	"github.com/google/uuid"
-
-	"github.com/opencontainers/image-spec/specs-go/v1"
 )
 
 // NewController returns Controller that wll be used for running methods off of it
@@ -41,50 +35,50 @@ func (c *Controller) EnsureImage(imageName string) error {
 	return nil
 }
 
-// ContainerCreate creates a container
-func (c *Controller) ContainerCreate(userConfig *ContainerConfig, volumes []VolumeMount) (containerID string, err error) {
-	config := container.Config{
-		Tty:   true,
-		Image: userConfig.Image,
-		Cmd:   userConfig.Cmd,
-	}
-	hostConfig := container.HostConfig{
-		Resources: container.Resources{
-			Memory: userConfig.MemoryMB * 1024 * 1024,
-		},
-	}
-	networkingConfig := network.NetworkingConfig{}
-	platform := v1.Platform{}
-
-	var mounts []mount.Mount
-
-	if volumes != nil {
-		mounts = setMultipleMounts(volumes)
-	} else {
-		m := mount.Mount{
-			Type:   mount.TypeVolume,
-			Source: c.volumeAndContainerName,
-			Target: "/userData",
-		}
-		mounts = append(mounts, m)
-	}
-
-	hostConfig.Mounts = mounts
-
-	resp, err := c.Cli.ContainerCreate(
-		context.Background(),
-		&config,
-		&hostConfig,
-		&networkingConfig,
-		&platform,
-		c.volumeAndContainerName,
-	)
-	if err != nil {
-		return "", fmt.Errorf("error while executing c.cli.ContainerCreate(): %w", err)
-	}
-
-	return resp.ID, nil
-}
+//// ContainerCreate creates a container
+//func (c *Controller) ContainerCreate(userConfig *ContainerConfig, volumes []VolumeMount) (containerID string, err error) {
+//	config := container.Config{
+//		Tty:   true,
+//		Image: userConfig.Image,
+//		Cmd:   userConfig.Cmd,
+//	}
+//	hostConfig := container.HostConfig{
+//		Resources: container.Resources{
+//			Memory: userConfig.MemoryMB * 1024 * 1024,
+//		},
+//	}
+//	networkingConfig := network.NetworkingConfig{}
+//	platform := v1.Platform{}
+//
+//	var mounts []mount.Mount
+//
+//	if volumes != nil {
+//		mounts = setMultipleMounts(volumes)
+//	} else {
+//		m := mount.Mount{
+//			Type:   mount.TypeVolume,
+//			Source: c.volumeAndContainerName,
+//			Target: "/userData",
+//		}
+//		mounts = append(mounts, m)
+//	}
+//
+//	hostConfig.Mounts = mounts
+//
+//	resp, err := c.Cli.ContainerCreate(
+//		context.Background(),
+//		&config,
+//		&hostConfig,
+//		&networkingConfig,
+//		&platform,
+//		c.volumeAndContainerName,
+//	)
+//	if err != nil {
+//		return "", fmt.Errorf("error while executing c.cli.ContainerCreate(): %w", err)
+//	}
+//
+//	return resp.ID, nil
+//}
 
 // ContainerStart starts a container
 func (c *Controller) ContainerStart(containerID string) error {
@@ -205,26 +199,26 @@ func (c *Controller) ContainerRemove(containerID string) error {
 //	return statusCode, logs, err
 //}
 
-// generateUUIDName generates unique names new containers and volumes
-func generateUUIDName(config *ContainerConfig) (containerName string) {
-	if config.ForBuild {
-		return "gobox" + "-" + "build" + "-" + config.Image + "-" + uuid.NewString()
-	} else {
-		return "gobox" + "-" + config.Image + "-" + uuid.NewString()
-	}
-}
-
-// setMultipleMounts is used for mounting multiple volumes
-func setMultipleMounts(volumes []VolumeMount) []mount.Mount {
-	var mounts []mount.Mount
-
-	for _, volume := range volumes {
-		m := mount.Mount{
-			Type:   mount.TypeVolume,
-			Source: volume.Volume.Name,
-			Target: volume.HostPath,
-		}
-		mounts = append(mounts, m)
-	}
-	return mounts
-}
+//// generateUUIDName generates unique names new containers and volumes
+//func generateUUIDName(config *ContainerConfig) (containerName string) {
+//	if config.ForBuild {
+//		return "gobox" + "-" + "build" + "-" + config.Image + "-" + uuid.NewString()
+//	} else {
+//		return "gobox" + "-" + config.Image + "-" + uuid.NewString()
+//	}
+//}
+//
+//// setMultipleMounts is used for mounting multiple volumes
+//func setMultipleMounts(volumes []VolumeMount) []mount.Mount {
+//	var mounts []mount.Mount
+//
+//	for _, volume := range volumes {
+//		m := mount.Mount{
+//			Type:   mount.TypeVolume,
+//			Source: volume.Volume.Name,
+//			Target: volume.HostPath,
+//		}
+//		mounts = append(mounts, m)
+//	}
+//	return mounts
+//}
