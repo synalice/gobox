@@ -27,13 +27,10 @@ func (c *Controller) FindVolume(name string) (volume *types.Volume, err error) {
 }
 
 // EnsureVolume makes sure specified volume exists and creates it if it doesn't
-func (c *Controller) EnsureVolume(name string) (new bool, volume *types.Volume, err error) {
+func (c *Controller) EnsureVolume(name string) (volume *types.Volume, err error) {
 	volume, err = c.FindVolume(name)
 	if err != nil {
-		return false, nil, err
-	}
-	if volume != nil {
-		return false, volume, nil
+		return nil, err
 	}
 
 	vol, err := c.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
@@ -41,7 +38,7 @@ func (c *Controller) EnsureVolume(name string) (new bool, volume *types.Volume, 
 		Name:   name,
 	})
 
-	return true, &vol, err
+	return &vol, err
 }
 
 // RemoveVolume removes specified volume
