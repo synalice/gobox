@@ -6,6 +6,7 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
+	"github.com/google/uuid"
 
 	volumetypes "github.com/docker/docker/api/types/volume"
 )
@@ -27,10 +28,22 @@ func (c *Controller) FindVolume(name string) (volume *types.Volume, err error) {
 }
 
 // EnsureVolume makes sure specified volume exists and creates it if it doesn't
+// Use empty string to generate name randomly with UUID
 func (c *Controller) EnsureVolume(name string) (volume *types.Volume, err error) {
+	if name == "" {
+		vol, err := c.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
+			Driver: "local",
+			Name:   "gobox" + "-" + "volume" + "-" + uuid.NewString(),
+		})
+		return &vol, err
+	}
+
 	volume, err = c.FindVolume(name)
 	if err != nil {
 		return nil, err
+	}
+	if volume != nil {
+		return volume, nil
 	}
 
 	vol, err := c.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
