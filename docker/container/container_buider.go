@@ -17,12 +17,28 @@ type Builder struct {
 	container  *Container
 }
 
-func NewContainerBuilder(controller *docker.Controller, config *config.Config) *Builder {
+func NewContainerBuilder(controller *docker.Controller) *Builder {
 	return &Builder{
 		controller: controller,
-		config:     config,
+		config:     nil,
 		container:  &Container{},
 	}
+}
+
+func (b *Builder) SetConfig(config *config.Config) *Builder {
+	b.config = config
+	return b
+}
+
+func (b *Builder) Build() (*Container, error) {
+	err := b.createContainer()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't create container: %w", err)
+	}
+
+	b.setTimeLimit(b.config.TimeLimit)
+
+	return b.container, nil
 }
 
 func (b *Builder) createContainer() error {
@@ -50,15 +66,4 @@ func (b *Builder) setTimeLimit(timeLimit time.Duration) *Builder {
 
 func (b *Builder) generateUUIDName() (containerName string) {
 	return "gobox" + "-" + b.config.ContainerConfig.Image + "-" + uuid.NewString()
-}
-
-func (b *Builder) Build() (*Container, error) {
-	err := b.createContainer()
-	if err != nil {
-		return nil, fmt.Errorf("couldn't create container: %w", err)
-	}
-
-	b.setTimeLimit(b.config.TimeLimit)
-
-	return b.container, nil
 }
