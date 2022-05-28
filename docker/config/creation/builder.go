@@ -1,6 +1,6 @@
 // FIXME: Add config defaults!
 
-package config
+package creation
 
 import (
 	"time"

@@ -8,12 +8,12 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/synalice/gobox/docker"
-	"github.com/synalice/gobox/docker/config"
+	"github.com/synalice/gobox/docker/config/creation"
 )
 
 type Builder struct {
 	controller *docker.Controller
-	config     *config.Config
+	config     *creation.Config
 	container  *Container
 }
 
@@ -25,7 +25,7 @@ func NewContainerBuilder(controller *docker.Controller) *Builder {
 	}
 }
 
-func (b *Builder) SetConfig(config *config.Config) *Builder {
+func (b *Builder) SetConfig(config *creation.Config) *Builder {
 	b.config = config
 	return b
 }
