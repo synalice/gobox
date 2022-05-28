@@ -17,14 +17,12 @@ import (
 )
 
 // NewController returns Controller that wll be used for running methods off of it
-func NewController(config *ContainerConfig) (c *Controller, err error) {
+func NewController() (c *Controller, err error) {
 	c = &Controller{
-		cli:                    nil,
-		config:                 config,
-		volumeAndContainerName: generateUUIDName(config),
+		Cli: nil,
 	}
 
-	c.cli, err = client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	c.Cli, err = client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		return nil, fmt.Errorf("error while executing client.NewClientWithOpts(): %w", err)
 	}
@@ -34,11 +32,7 @@ func NewController(config *ContainerConfig) (c *Controller, err error) {
 
 // EnsureImage pulls images from docker hub to make sure in exists
 func (c *Controller) EnsureImage(imageName string) error {
-	if c.config.LocalImage {
-		return nil
-	}
-
-	reader, err := c.cli.ImagePull(context.Background(), imageName, types.ImagePullOptions{})
+	reader, err := c.Cli.ImagePull(context.Background(), imageName, types.ImagePullOptions{})
 	if err != nil {
 		return fmt.Errorf("error while executing c.cli.ImagePull(): %w", err)
 	}
@@ -77,7 +71,7 @@ func (c *Controller) ContainerCreate(userConfig *ContainerConfig, volumes []Volu
 
 	hostConfig.Mounts = mounts
 
-	resp, err := c.cli.ContainerCreate(
+	resp, err := c.Cli.ContainerCreate(
 		context.Background(),
 		&config,
 		&hostConfig,
@@ -94,7 +88,7 @@ func (c *Controller) ContainerCreate(userConfig *ContainerConfig, volumes []Volu
 
 // ContainerStart starts a container
 func (c *Controller) ContainerStart(containerID string) error {
-	err := c.cli.ContainerStart(context.Background(), containerID, types.ContainerStartOptions{})
+	err := c.Cli.ContainerStart(context.Background(), containerID, types.ContainerStartOptions{})
 	if err != nil {
 		return fmt.Errorf("error while executing c.cli.ContainerStart(): %w", err)
 	}
@@ -107,7 +101,7 @@ func (c *Controller) ContainerWait(containerID string, timeLimit time.Duration) 
 	ctx, cancel := context.WithTimeout(context.Background(), timeLimit)
 	defer cancel()
 
-	resultC, errC := c.cli.ContainerWait(ctx, containerID, "")
+	resultC, errC := c.Cli.ContainerWait(ctx, containerID, "")
 	select {
 	case err := <-errC:
 		return 0, err
@@ -121,7 +115,7 @@ func (c *Controller) ContainerLog(containerID string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	reader, err := c.cli.ContainerLogs(ctx, containerID, types.ContainerLogsOptions{
+	reader, err := c.Cli.ContainerLogs(ctx, containerID, types.ContainerLogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 	})
@@ -139,7 +133,7 @@ func (c *Controller) ContainerLog(containerID string) (string, error) {
 
 // ContainerRemove removes a container
 func (c *Controller) ContainerRemove(containerID string) error {
-	err := c.cli.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{
+	err := c.Cli.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{
 		RemoveVolumes: true,
 		Force:         true,
 	})

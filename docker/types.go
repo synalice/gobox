@@ -25,9 +25,7 @@ type ContainerFile struct {
 
 // Controller is an object that wll be used for running methods off of it
 type Controller struct {
-	cli                    *client.Client
-	config                 *ContainerConfig
-	volumeAndContainerName string // The same for the container and volume. Is used to sync names between them
+	Cli *client.Client
 }
 
 // VolumeMount is used for specifying volumes for the container to mount
