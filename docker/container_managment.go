@@ -144,66 +144,66 @@ func (c *Controller) ContainerRemove(containerID string) error {
 	return nil
 }
 
-// Run creates, runs and removes container defined by the ContainerConfig
-func (c *Controller) Run() (statusCode int64, logs string, err error) {
-	// TODO: Create custom errors for this
-
-	// Pulls image if needed
-	err = c.EnsureImage(c.config.Image)
-	if err != nil {
-		return statusCode, logs, err
-	}
-
-	// Create volume
-	_, _, err = c.EnsureVolume(c.volumeAndContainerName)
-	if err != nil {
-		return statusCode, logs, err
-	}
-
-	// Remove volume
-	defer func(c *Controller, name string) {
-		err := c.RemoveVolume(name)
-		if err != nil {
-			// TODO: remove this panic
-			panic(err)
-		}
-	}(c, c.volumeAndContainerName)
-
-	// Create the container
-	id, err := c.ContainerCreate(c.config, nil)
-	if err != nil {
-		return statusCode, logs, err
-	}
-
-	// Remove the container
-	defer func(c *Controller, containerID string) {
-		err := c.ContainerRemove(containerID)
-		if err != nil {
-			// TODO: remove this panic
-			panic(err)
-		}
-	}(c, id)
-
-	// Start the container
-	err = c.ContainerStart(id)
-	if err != nil {
-		return statusCode, logs, err
-	}
-
-	// Wait for it to finish
-	statusCode, err = c.ContainerWait(id, c.config.TimeLimit)
-	if err != nil {
-		return statusCode, logs, err
-	}
-
-	// Get the log
-	logs, err = c.ContainerLog(id)
-	if err != nil {
-		return statusCode, logs, err
-	}
-
-	return statusCode, logs, err
-}
+//// Run creates, runs and removes container defined by the ContainerConfig
+//func (c *Controller) Run() (statusCode int64, logs string, err error) {
+//	// TODO: Create custom errors for this
+//
+//	// Pulls image if needed
+//	err = c.EnsureImage(c.config.Image)
+//	if err != nil {
+//		return statusCode, logs, err
+//	}
+//
+//	// Create volume
+//	_, _, err = c.EnsureVolume(c.volumeAndContainerName)
+//	if err != nil {
+//		return statusCode, logs, err
+//	}
+//
+//	// Remove volume
+//	defer func(c *Controller, name string) {
+//		err := c.RemoveVolume(name)
+//		if err != nil {
+//			// TODO: remove this panic
+//			panic(err)
+//		}
+//	}(c, c.volumeAndContainerName)
+//
+//	// Create the container
+//	id, err := c.ContainerCreate(c.config, nil)
+//	if err != nil {
+//		return statusCode, logs, err
+//	}
+//
+//	// Remove the container
+//	defer func(c *Controller, containerID string) {
+//		err := c.ContainerRemove(containerID)
+//		if err != nil {
+//			// TODO: remove this panic
+//			panic(err)
+//		}
+//	}(c, id)
+//
+//	// Start the container
+//	err = c.ContainerStart(id)
+//	if err != nil {
+//		return statusCode, logs, err
+//	}
+//
+//	// Wait for it to finish
+//	statusCode, err = c.ContainerWait(id, c.config.TimeLimit)
+//	if err != nil {
+//		return statusCode, logs, err
+//	}
+//
+//	// Get the log
+//	logs, err = c.ContainerLog(id)
+//	if err != nil {
+//		return statusCode, logs, err
+//	}
+//
+//	return statusCode, logs, err
+//}
 
 // generateUUIDName generates unique names new containers and volumes
 func generateUUIDName(config *ContainerConfig) (containerName string) {
