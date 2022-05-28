@@ -57,6 +57,7 @@ func (b *Builder) MemoryLimit(memoryLimit int) *Builder {
 // DiskSpace sets max disk space allocated for the container (in megabytes)
 // TODO: This might not work. Not yet tested
 func (b *Builder) DiskSpace(diskSpace int) *Builder {
+	b.Config.HostConfig.StorageOpt = make(map[string]string)
 	b.Config.HostConfig.StorageOpt["size"] = string(rune(diskSpace)) + "MB"
 	return b
 }
