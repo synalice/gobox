@@ -38,7 +38,7 @@ func TestConfigBuilder(t *testing.T) {
 		if err != nil {
 			t.Errorf("couldn't remove volume: %v", err)
 		}
-	}(c, volume1.Name)
+	}(c, volume2.Name)
 	if err != nil {
 		t.Errorf("couldn't remove volume: %v", err)
 	}
@@ -52,7 +52,7 @@ func TestConfigBuilder(t *testing.T) {
 		if err != nil {
 			t.Errorf("couldn't remove volume: %v", err)
 		}
-	}(c, volume1.Name)
+	}(c, volume3.Name)
 	if err != nil {
 		t.Errorf("couldn't remove volume: %v", err)
 	}

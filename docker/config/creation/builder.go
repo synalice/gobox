@@ -3,6 +3,7 @@
 package creation
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/docker/docker/api/types"
@@ -58,7 +59,7 @@ func (b *Builder) MemoryLimit(memoryLimit int) *Builder {
 // TODO: This might not work. Not yet tested
 func (b *Builder) DiskSpace(diskSpace int) *Builder {
 	b.Config.HostConfig.StorageOpt = make(map[string]string)
-	b.Config.HostConfig.StorageOpt["size"] = string(rune(diskSpace)) + "MB"
+	b.Config.HostConfig.StorageOpt["size"] = strconv.Itoa(diskSpace) + "MB"
 	return b
 }
 
