@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/synalice/gobox/docker"
-	creationconfig "github.com/synalice/gobox/docker/config/creation"
-	"github.com/synalice/gobox/docker/container/creation"
+	"github.com/synalice/gobox/docker/config"
+	"github.com/synalice/gobox/docker/container"
 )
 
 func TestBuilder(t *testing.T) {
@@ -58,7 +58,7 @@ func TestBuilder(t *testing.T) {
 		t.Errorf("couldn't remove volume: %v", err)
 	}
 
-	configBuilder := creationconfig.NewConfigBuilder()
+	configBuilder := config.NewConfigBuilder()
 	configBuilder.
 		Image("python").
 		Cmd("python", "...").
@@ -69,11 +69,11 @@ func TestBuilder(t *testing.T) {
 		MemoryLimit(64).
 		CPUCount(6).
 		DiskSpace(1024)
-	config := configBuilder.Build()
+	newConfig := configBuilder.Build()
 
 	containerBuilder := container.NewContainerBuilder(c)
 	containerBuilder.
-		SetConfig(config)
+		SetConfig(newConfig)
 	builtContainer, err := containerBuilder.Build()
 	if err != nil {
 		t.Errorf("couldn't build container: %v", err)

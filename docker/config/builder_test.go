@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/synalice/gobox/docker"
-	creationconfig "github.com/synalice/gobox/docker/config/creation"
+	creationconfig "github.com/synalice/gobox/docker/config"
 )
 
 func TestConfigBuilder(t *testing.T) {
