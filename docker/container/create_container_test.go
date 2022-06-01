@@ -5,28 +5,29 @@ import (
 	"testing"
 	"time"
 
-	"github.com/synalice/gobox/docker"
 	"github.com/synalice/gobox/docker/config"
 	"github.com/synalice/gobox/docker/container"
+	"github.com/synalice/gobox/docker/controller"
+	"github.com/synalice/gobox/docker/volume"
 )
 
 func TestBuilder(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := controller.NewController()
 	if err != nil {
 		t.Errorf("error creating new controller: %v", err)
 	}
 
-	volume1, err := c.EnsureVolume("")
+	volume1, err := volume.EnsureVolume(c, "")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
 
-	volume2, err := c.EnsureVolume("")
+	volume2, err := volume.EnsureVolume(c, "")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
 
-	volume3, err := c.EnsureVolume("")
+	volume3, err := volume.EnsureVolume(c, "")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
