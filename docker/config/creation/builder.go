@@ -1,6 +1,6 @@
 // FIXME: Add config defaults!
 
-package creation
+package config
 
 import (
 	"strconv"

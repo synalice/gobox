@@ -1,4 +1,4 @@
-package creation
+package config
 
 import (
 	"time"
