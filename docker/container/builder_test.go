@@ -20,42 +20,15 @@ func TestBuilder(t *testing.T) {
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
-	defer func(c *docker.Controller, name string) {
-		err := c.RemoveVolume(name)
-		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
-		}
-	}(c, volume1.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
 	volume2, err := c.EnsureVolume("")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
-	defer func(c *docker.Controller, name string) {
-		err := c.RemoveVolume(name)
-		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
-		}
-	}(c, volume2.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
 	volume3, err := c.EnsureVolume("")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
-	}
-	defer func(c *docker.Controller, name string) {
-		err := c.RemoveVolume(name)
-		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
-		}
-	}(c, volume3.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
 	}
 
 	configBuilder := config.NewConfigBuilder()
@@ -79,5 +52,5 @@ func TestBuilder(t *testing.T) {
 		t.Errorf("couldn't build container: %v", err)
 	}
 
-	fmt.Print("Container ID:", builtContainer.ID)
+	fmt.Println("Container ID:", builtContainer.ID)
 }
