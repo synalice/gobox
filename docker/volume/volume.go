@@ -12,8 +12,8 @@ import (
 	"github.com/synalice/gobox/docker/controller"
 )
 
-// FindVolume finds a specified volume
-func FindVolume(controller *controller.Controller, volumeName string) (volume *types.Volume, err error) {
+// Find finds a specified volume
+func Find(controller *controller.Controller, volumeName string) (volume *types.Volume, err error) {
 	volumes, err := controller.Cli.VolumeList(context.Background(), filters.NewArgs())
 	if err != nil {
 		return nil, err
@@ -28,9 +28,9 @@ func FindVolume(controller *controller.Controller, volumeName string) (volume *t
 	return nil, nil
 }
 
-// EnsureVolume makes sure specified volume exists and creates it if it doesn't
+// Ensure makes sure specified volume exists and creates it if it doesn't
 // Use empty string to generate name randomly with UUID
-func EnsureVolume(controller *controller.Controller, volumeName string) (volume *types.Volume, err error) {
+func Ensure(controller *controller.Controller, volumeName string) (volume *types.Volume, err error) {
 	if volumeName == "" {
 		vol, err := controller.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
 			Driver: "local",
@@ -39,7 +39,7 @@ func EnsureVolume(controller *controller.Controller, volumeName string) (volume 
 		return &vol, err
 	}
 
-	volume, err = FindVolume(controller, volumeName)
+	volume, err = Find(controller, volumeName)
 	if err != nil {
 		return nil, err
 	}
@@ -55,9 +55,9 @@ func EnsureVolume(controller *controller.Controller, volumeName string) (volume 
 	return &vol, err
 }
 
-// RemoveVolume removes specified volume
-func RemoveVolume(controller *controller.Controller, volumeName string) error {
-	vol, err := FindVolume(controller, volumeName)
+// Remove removes specified volume
+func Remove(controller *controller.Controller, volumeName string) error {
+	vol, err := Find(controller, volumeName)
 	if err != nil {
 		return fmt.Errorf("couldn't find volume: %w", err)
 	}

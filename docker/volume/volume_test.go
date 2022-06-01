@@ -13,17 +13,17 @@ func TestVolumeLifecycle(t *testing.T) {
 		t.Error(err)
 	}
 
-	volume1, err := volume.EnsureVolume(c, "myVolume")
+	volume1, err := volume.Ensure(c, "myVolume")
 	if err != nil {
 		t.Errorf("couldn't create a volume")
 	}
 
-	volume2, err := volume.EnsureVolume(c, "myVolume")
+	volume2, err := volume.Ensure(c, "myVolume")
 	if volume2.Name != volume1.Name {
 		t.Errorf("should have used an already existing volume")
 	}
 
-	err = volume.RemoveVolume(c, "myVolume")
+	err = volume.Remove(c, "myVolume")
 	if err != nil {
 		t.Errorf("couldn't remove a volume")
 	}
