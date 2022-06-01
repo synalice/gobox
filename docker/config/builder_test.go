@@ -22,12 +22,9 @@ func TestConfigBuilder(t *testing.T) {
 	defer func(c *docker.Controller, name string) {
 		err := c.RemoveVolume(name)
 		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
+			t.Errorf("couldn't remove volume1: %v", err)
 		}
 	}(c, volume1.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
 	volume2, err := c.EnsureVolume("")
 	if err != nil {
@@ -36,12 +33,9 @@ func TestConfigBuilder(t *testing.T) {
 	defer func(c *docker.Controller, name string) {
 		err := c.RemoveVolume(name)
 		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
+			t.Errorf("couldn't remove volume2: %v", err)
 		}
 	}(c, volume2.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
 	volume3, err := c.EnsureVolume("")
 	if err != nil {
@@ -50,12 +44,9 @@ func TestConfigBuilder(t *testing.T) {
 	defer func(c *docker.Controller, name string) {
 		err := c.RemoveVolume(name)
 		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
+			t.Errorf("couldn't remove volume3: %v", err)
 		}
 	}(c, volume3.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
 	configBuilder := config.NewConfigBuilder()
 	configBuilder.
