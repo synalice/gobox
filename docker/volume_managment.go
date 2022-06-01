@@ -6,13 +6,14 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
+	"github.com/google/uuid"
 
 	volumetypes "github.com/docker/docker/api/types/volume"
 )
 
 // FindVolume finds a specified volume
 func (c *Controller) FindVolume(name string) (volume *types.Volume, err error) {
-	volumes, err := c.cli.VolumeList(context.Background(), filters.NewArgs())
+	volumes, err := c.Cli.VolumeList(context.Background(), filters.NewArgs())
 	if err != nil {
 		return nil, err
 	}
@@ -27,21 +28,30 @@ func (c *Controller) FindVolume(name string) (volume *types.Volume, err error) {
 }
 
 // EnsureVolume makes sure specified volume exists and creates it if it doesn't
-func (c *Controller) EnsureVolume(name string) (new bool, volume *types.Volume, err error) {
-	volume, err = c.FindVolume(name)
-	if err != nil {
-		return false, nil, err
-	}
-	if volume != nil {
-		return false, volume, nil
+// Use empty string to generate name randomly with UUID
+func (c *Controller) EnsureVolume(name string) (volume *types.Volume, err error) {
+	if name == "" {
+		vol, err := c.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
+			Driver: "local",
+			Name:   "gobox" + "-" + "volume" + "-" + uuid.NewString(),
+		})
+		return &vol, err
 	}
 
-	vol, err := c.cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
+	volume, err = c.FindVolume(name)
+	if err != nil {
+		return nil, err
+	}
+	if volume != nil {
+		return volume, nil
+	}
+
+	vol, err := c.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
 		Driver: "local",
 		Name:   name,
 	})
 
-	return true, &vol, err
+	return &vol, err
 }
 
 // RemoveVolume removes specified volume
@@ -54,7 +64,7 @@ func (c *Controller) RemoveVolume(name string) error {
 		return nil
 	}
 
-	err = c.cli.VolumeRemove(context.Background(), name, true)
+	err = c.Cli.VolumeRemove(context.Background(), name, true)
 	if err != nil {
 		return fmt.Errorf("couldn't remove volume: %w", err)
 	}
