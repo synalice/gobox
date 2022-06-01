@@ -1,5 +1,3 @@
-// FIXME: Add config defaults!
-
 package config
 
 import (
@@ -7,7 +5,10 @@ import (
 	"time"
 
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
+	"github.com/docker/docker/api/types/network"
+	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
 type Builder struct {
@@ -16,7 +17,20 @@ type Builder struct {
 
 // NewConfigBuilder return new builder that can be used to build config for a container
 func NewConfigBuilder() *Builder {
-	return &Builder{Config: &Config{}}
+	return &Builder{Config: &Config{
+		ContainerConfig: container.Config{
+			//AttachStdin:  true,
+			//AttachStdout: true,
+			//AttachStderr: true,
+			Tty: true,
+			//OpenStdin:    true,
+			//StdinOnce:    false,
+		},
+		HostConfig:       container.HostConfig{},
+		NetworkingConfig: network.NetworkingConfig{},
+		Platform:         v1.Platform{},
+		TimeLimit:        5 * time.Second,
+	}}
 }
 
 // Image sets image that container will use

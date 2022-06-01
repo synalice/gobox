@@ -5,57 +5,49 @@ import (
 	"testing"
 	"time"
 
-	"github.com/synalice/gobox/docker"
 	"github.com/synalice/gobox/docker/config"
+	"github.com/synalice/gobox/docker/controller"
+	"github.com/synalice/gobox/docker/volume"
 )
 
 func TestConfigBuilder(t *testing.T) {
-	c, err := docker.NewController()
+	c, err := controller.NewController()
 	if err != nil {
 		t.Errorf("error creating new controller: %v", err)
 	}
 
-	volume1, err := c.EnsureVolume("")
+	volume1, err := volume.Ensure(c, "")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
-	defer func(c *docker.Controller, name string) {
-		err := c.RemoveVolume(name)
+	defer func(c *controller.Controller, name string) {
+		err := volume.Remove(c, name)
 		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
+			t.Errorf("couldn't remove volume1: %v", err)
 		}
 	}(c, volume1.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
-	volume2, err := c.EnsureVolume("")
+	volume2, err := volume.Ensure(c, "")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
-	defer func(c *docker.Controller, name string) {
-		err := c.RemoveVolume(name)
+	defer func(c *controller.Controller, name string) {
+		err := volume.Remove(c, name)
 		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
+			t.Errorf("couldn't remove volume2: %v", err)
 		}
 	}(c, volume2.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
-	volume3, err := c.EnsureVolume("")
+	volume3, err := volume.Ensure(c, "")
 	if err != nil {
 		t.Errorf("error creating volume: %v", err)
 	}
-	defer func(c *docker.Controller, name string) {
-		err := c.RemoveVolume(name)
+	defer func(c *controller.Controller, name string) {
+		err := volume.Remove(c, name)
 		if err != nil {
-			t.Errorf("couldn't remove volume: %v", err)
+			t.Errorf("couldn't remove volume3: %v", err)
 		}
 	}(c, volume3.Name)
-	if err != nil {
-		t.Errorf("couldn't remove volume: %v", err)
-	}
 
 	configBuilder := config.NewConfigBuilder()
 	configBuilder.
