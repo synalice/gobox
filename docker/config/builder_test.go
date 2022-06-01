@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/synalice/gobox/docker"
-	creationconfig "github.com/synalice/gobox/docker/config/creation"
+	"github.com/synalice/gobox/docker/config"
 )
 
 func TestConfigBuilder(t *testing.T) {
@@ -57,7 +57,7 @@ func TestConfigBuilder(t *testing.T) {
 		t.Errorf("couldn't remove volume: %v", err)
 	}
 
-	configBuilder := creationconfig.NewConfigBuilder()
+	configBuilder := config.NewConfigBuilder()
 	configBuilder.
 		Image("python").
 		Cmd("python", "...").
