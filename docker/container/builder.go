@@ -7,17 +7,17 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/synalice/gobox/docker"
 	"github.com/synalice/gobox/docker/config"
+	"github.com/synalice/gobox/docker/controller"
 )
 
 type Builder struct {
-	controller *docker.Controller
+	controller *controller.Controller
 	config     *config.Config
 	container  *Container
 }
 
-func NewContainerBuilder(controller *docker.Controller) *Builder {
+func NewContainerBuilder(controller *controller.Controller) *Builder {
 	return &Builder{
 		controller: controller,
 		config:     nil,
