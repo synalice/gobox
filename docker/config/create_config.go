@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"strconv"
 	"time"
 
@@ -9,32 +10,42 @@ import (
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
+
+	"github.com/synalice/gobox/docker/controller"
 )
 
 type Builder struct {
-	Config *Config
+	controller *controller.Controller
+	Config     *Config
 }
 
 // NewConfigBuilder return new builder that can be used to build config for a container
-func NewConfigBuilder() *Builder {
-	return &Builder{Config: &Config{
-		ContainerConfig: container.Config{
-			//AttachStdin:  true,
-			//AttachStdout: true,
-			//AttachStderr: true,
-			Tty: true,
-			//OpenStdin:    true,
-			//StdinOnce:    false,
-		},
-		HostConfig:       container.HostConfig{},
-		NetworkingConfig: network.NetworkingConfig{},
-		Platform:         v1.Platform{},
-		TimeLimit:        5 * time.Second,
-	}}
+func NewConfigBuilder(controller *controller.Controller) *Builder {
+	return &Builder{
+		controller: controller,
+		Config: &Config{
+			ContainerConfig: container.Config{
+				//AttachStdin:  true,
+				//AttachStdout: true,
+				//AttachStderr: true,
+				Tty: true,
+				//OpenStdin:    true,
+				//StdinOnce:    false,
+			},
+			HostConfig:       container.HostConfig{},
+			NetworkingConfig: network.NetworkingConfig{},
+			Platform:         v1.Platform{},
+			TimeLimit:        5 * time.Second,
+		}}
 }
 
 // Image sets image that container will use
 func (b *Builder) Image(image string) *Builder {
+	err := EnsureImage(b.controller, image)
+	if err != nil {
+		log.Println("couldn't pull an image from the dockerhub:", err)
+	}
+
 	b.Config.ContainerConfig.Image = image
 	return b
 }
@@ -57,20 +68,19 @@ func (b *Builder) Mount(volume *types.Volume, containerPath string) *Builder {
 	return b
 }
 
-// TimeLimit sets max allowed time for the container to run
+// TimeLimit sets maximum allowed time for the container to run
 func (b *Builder) TimeLimit(timeLimit time.Duration) *Builder {
 	b.Config.TimeLimit = timeLimit
 	return b
 }
 
-// MemoryLimit sets max amount of memory allocated to the container (in megabytes)
+// MemoryLimit sets maximum amount of memory allocated to the container (in megabytes)
 func (b *Builder) MemoryLimit(memoryLimit int) *Builder {
 	b.Config.HostConfig.Resources.Memory = int64(memoryLimit * 1024 * 1024)
 	return b
 }
 
-// DiskSpace sets max disk space allocated for the container (in megabytes)
-// TODO: This might not work. Not yet tested
+// DiskSpace sets maximum disk space allocated for the container (in megabytes)
 func (b *Builder) DiskSpace(diskSpace int) *Builder {
 	b.Config.HostConfig.StorageOpt = make(map[string]string)
 	b.Config.HostConfig.StorageOpt["size"] = strconv.Itoa(diskSpace) + "MB"

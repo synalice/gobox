@@ -7,7 +7,8 @@ import (
 	"github.com/synalice/gobox/docker/controller"
 )
 
-// Wait waits until the container is stopped
+// Wait waits until the container has either finished executing or was killed
+// for exceeding time limit
 func Wait(controller *controller.Controller, containerID string, timeLimit time.Duration) (state int64, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeLimit)
 	defer cancel()
