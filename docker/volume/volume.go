@@ -34,7 +34,7 @@ func Ensure(controller *controller.Controller, volumeName string) (volume *types
 	if volumeName == "" {
 		vol, err := controller.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{
 			Driver: "local",
-			Name:   "gobox" + "-" + "volume" + "-" + uuid.NewString(),
+			Name:   generateVolumeName(),
 		})
 		return &vol, err
 	}
@@ -71,4 +71,9 @@ func Remove(controller *controller.Controller, volumeName string) error {
 	}
 
 	return nil
+}
+
+// generateVolumeName generates unique UUID name for each new volume
+func generateVolumeName() string {
+	return "gobox" + "-" + "volume" + "-" + uuid.NewString()
 }
