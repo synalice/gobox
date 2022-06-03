@@ -49,7 +49,7 @@ func TestConfigBuilder(t *testing.T) {
 		}
 	}(c, volume3.Name)
 
-	configBuilder := config.NewConfigBuilder()
+	configBuilder := config.NewConfigBuilder(c)
 	configBuilder.
 		Image("python").
 		Cmd("python", "...").

@@ -32,7 +32,7 @@ func TestContainerLifecycle(t *testing.T) {
 		t.Errorf("error creating volume: %v", err)
 	}
 
-	configBuilder := config.NewConfigBuilder()
+	configBuilder := config.NewConfigBuilder(c)
 	configBuilder.
 		Image("python").
 		Cmd("python").
