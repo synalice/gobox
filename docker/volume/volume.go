@@ -28,8 +28,8 @@ func Find(controller *controller.Controller, volumeName string) (volume *types.V
 	return nil, nil
 }
 
-// Ensure makes sure specified volume exists and creates it if it doesn't
-// Use empty string to generate name randomly with UUID
+// Ensure makes sure specified volume exists and creates it if it is not
+// present. Use empty string to generate name randomly.
 func Ensure(controller *controller.Controller, volumeName string) (volume *types.Volume, err error) {
 	if volumeName == "" {
 		vol, err := controller.Cli.VolumeCreate(context.Background(), volumetypes.VolumeCreateBody{

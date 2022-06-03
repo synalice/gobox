@@ -11,7 +11,8 @@ type Controller struct {
 	Cli *client.Client
 }
 
-// NewController returns Controller that wll be used for running methods off of it
+// NewController returns new Controller that wll be used for running methods
+// off of it
 func NewController() (c *Controller, err error) {
 	c = &Controller{
 		Cli: nil,

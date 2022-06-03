@@ -9,7 +9,7 @@ import (
 	"github.com/synalice/gobox/docker/controller"
 )
 
-// Remove deletes a container
+// Remove deletes a specific container from host
 func Remove(controller *controller.Controller, containerID string) error {
 	err := controller.Cli.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{
 		RemoveVolumes: true,

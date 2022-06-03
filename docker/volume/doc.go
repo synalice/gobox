@@ -1,4 +1,4 @@
 /*
-Package volume is used for managing docker volumes.
+Package volume is used for managing docker volumes
 */
 package volume

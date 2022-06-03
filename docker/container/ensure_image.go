@@ -11,7 +11,7 @@ import (
 	"github.com/synalice/gobox/docker/controller"
 )
 
-// EnsureImage pulls images from docker hub to make sure in exists
+// EnsureImage pulls an image from the docker hub to make sure in exists
 func EnsureImage(controller *controller.Controller, imageName string) error {
 	reader, err := controller.Cli.ImagePull(context.Background(), imageName, types.ImagePullOptions{})
 	if err != nil {

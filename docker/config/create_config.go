@@ -57,20 +57,19 @@ func (b *Builder) Mount(volume *types.Volume, containerPath string) *Builder {
 	return b
 }
 
-// TimeLimit sets max allowed time for the container to run
+// TimeLimit sets maximum allowed time for the container to run
 func (b *Builder) TimeLimit(timeLimit time.Duration) *Builder {
 	b.Config.TimeLimit = timeLimit
 	return b
 }
 
-// MemoryLimit sets max amount of memory allocated to the container (in megabytes)
+// MemoryLimit sets maximum amount of memory allocated to the container (in megabytes)
 func (b *Builder) MemoryLimit(memoryLimit int) *Builder {
 	b.Config.HostConfig.Resources.Memory = int64(memoryLimit * 1024 * 1024)
 	return b
 }
 
-// DiskSpace sets max disk space allocated for the container (in megabytes)
-// TODO: This might not work. Not yet tested
+// DiskSpace sets maximum disk space allocated for the container (in megabytes)
 func (b *Builder) DiskSpace(diskSpace int) *Builder {
 	b.Config.HostConfig.StorageOpt = make(map[string]string)
 	b.Config.HostConfig.StorageOpt["size"] = strconv.Itoa(diskSpace) + "MB"

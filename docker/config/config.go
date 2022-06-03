@@ -8,11 +8,14 @@ import (
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
-// Config contains data for creating a docker container
+// Config contains fields necessary for creating a docker container
 type Config struct {
+	//Fields related to docker API
 	ContainerConfig  container.Config
 	HostConfig       container.HostConfig
 	NetworkingConfig network.NetworkingConfig
 	Platform         v1.Platform
-	TimeLimit        time.Duration
+
+	// Maximum allowed time for the container to run
+	TimeLimit time.Duration
 }
