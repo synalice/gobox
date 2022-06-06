@@ -75,5 +75,10 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	err = mount.CleanUp(ctrl, mount1, mount2, mount3)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	fmt.Println(logs)
 }
