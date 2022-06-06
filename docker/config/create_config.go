@@ -5,13 +5,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
-	"github.com/docker/docker/api/types/mount"
+	dockerMount "github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 
 	"github.com/synalice/gobox/docker/controller"
+	goboxMount "github.com/synalice/gobox/docker/mount"
 )
 
 type Builder struct {
@@ -56,12 +56,13 @@ func (b *Builder) Cmd(cmd ...string) *Builder {
 	return b
 }
 
-// Mount sets a mount point that container will have. Can be called multiple times for multiple mounts
-func (b *Builder) Mount(volume *types.Volume, containerPath string) *Builder {
-	m := mount.Mount{
-		Type:   mount.TypeVolume,
-		Source: volume.Name,
-		Target: containerPath,
+// Mount sets a mount point that container will have. Can be called multiple
+// times for multiple mounts
+func (b *Builder) Mount(mount goboxMount.Mount) *Builder {
+	m := dockerMount.Mount{
+		Type:   dockerMount.TypeVolume,
+		Source: mount.Volume.Name,
+		Target: mount.Folder,
 	}
 	b.Config.HostConfig.Mounts = append(b.Config.HostConfig.Mounts, m)
 
