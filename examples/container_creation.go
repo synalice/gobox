@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -58,12 +59,10 @@ func main() {
 	}
 
 	_, err = container.Wait(ctrl, builtContainer.ID, builtContainer.TimeLimit)
-	if err != nil {
-		if err.Error() == "context deadline exceeded" {
-			log.Println("Container killed due to timeout")
-		} else {
-			log.Fatalf("error while waiting for container to finish: %v", err)
-		}
+	if err.Error() == "container killed due to timeout" {
+		log.Println(err)
+	} else {
+		log.Fatalln(err)
 	}
 
 	logs, err := container.GetLogs(ctrl, builtContainer.ID)
@@ -76,5 +75,5 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	log.Println(logs)
+	fmt.Println(logs)
 }

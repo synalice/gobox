@@ -1,6 +1,7 @@
 package container_test
 
 import (
+	"fmt"
 	"log"
 	"testing"
 	"time"
@@ -59,12 +60,10 @@ func TestContainerLifecycle(t *testing.T) {
 	}
 
 	_, err = container.Wait(ctrl, builtContainer.ID, builtContainer.TimeLimit)
-	if err != nil {
-		if err.Error() == "context deadline exceeded" {
-			log.Println("Container killed due to timeout")
-		} else {
-			t.Errorf("error while waiting for container to finish: %v", err)
-		}
+	if err.Error() == "container killed due to timeout" {
+		log.Println(err)
+	} else {
+		t.Errorf("%v", err)
 	}
 
 	logs, err := container.GetLogs(ctrl, builtContainer.ID)
@@ -77,5 +76,5 @@ func TestContainerLifecycle(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 
-	log.Println(logs)
+	fmt.Println(logs)
 }
