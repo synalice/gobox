@@ -8,6 +8,7 @@ import (
 	"github.com/synalice/gobox/docker/config"
 	"github.com/synalice/gobox/docker/container"
 	"github.com/synalice/gobox/docker/controller"
+	"github.com/synalice/gobox/docker/file"
 	"github.com/synalice/gobox/docker/mount"
 )
 
@@ -32,10 +33,15 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	myFile := file.File{
+		Name: "main.py",
+		Body: "print(\"Hello, World!\")",
+	}
+
 	configBuilder := config.NewConfigBuilder(ctrl)
 	configBuilder.
 		Image("python").
-		Cmd("python").
+		Cmd("python", "/userFolder1/main.py").
 		Mount(mount1).
 		Mount(mount2).
 		Mount(mount3).
@@ -47,7 +53,8 @@ func main() {
 
 	containerBuilder := container.NewContainerBuilder(ctrl)
 	containerBuilder.
-		SetConfig(newConfig)
+		SetConfig(newConfig).
+		SetFile(myFile, mount1)
 	builtContainer, err := containerBuilder.Build()
 	if err != nil {
 		log.Fatalln(err)

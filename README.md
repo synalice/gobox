@@ -11,5 +11,5 @@ Build, run &amp; test untrusted code in docker containers using Go
 - [x] Container creation
 - [x] Volume Creation
 - [x] Container limits
-- [ ] Copying files to container
+- [x] Copying files to container
 - [ ] Scoring system  
