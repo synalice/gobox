@@ -66,9 +66,9 @@ func main() {
 	}
 
 	_, err = container.Wait(ctrl, builtContainer.ID, builtContainer.TimeLimit)
-	if err.Error() == "container killed due to timeout" {
+	if err == container.ErrorTimeout {
 		log.Println(err)
-	} else {
+	} else if err != nil {
 		log.Fatalln(err)
 	}
 

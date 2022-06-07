@@ -2,10 +2,15 @@ package container
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/synalice/gobox/docker/controller"
+)
+
+var (
+	ErrorTimeout = errors.New("container killed due to timeout")
 )
 
 // Wait waits until the container has either finished executing or was killed
@@ -18,7 +23,7 @@ func Wait(controller *controller.Controller, containerID string, timeLimit time.
 	select {
 	case err := <-errC:
 		if err.Error() == "context deadline exceeded" {
-			return 0, fmt.Errorf("container killed due to timeout")
+			return 0, ErrorTimeout
 		}
 		return 0, fmt.Errorf("error while waiting for container to finish: %w", err)
 	case result := <-resultC:
