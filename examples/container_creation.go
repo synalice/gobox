@@ -15,22 +15,22 @@ import (
 func main() {
 	ctrl, err := controller.NewController()
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	mount1, err := mount.NewMount(ctrl, "", "/userFolder1")
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	mount2, err := mount.NewMount(ctrl, "", "/userFolder2")
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	mount3, err := mount.NewMount(ctrl, "", "/userFolder3")
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	myFile := file.File{
@@ -57,34 +57,34 @@ func main() {
 		SetFile(myFile, mount1)
 	builtContainer, err := containerBuilder.Build()
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	err = container.Start(ctrl, builtContainer.ID)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	_, err = container.Wait(ctrl, builtContainer.ID, builtContainer.TimeLimit)
 	if err == container.ErrorTimeout {
 		log.Println(err)
 	} else if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	logs, err := container.GetLogs(ctrl, builtContainer.ID)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	err = container.Remove(ctrl, builtContainer.ID)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	err = mount.CleanUp(ctrl, mount1, mount2, mount3)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	fmt.Println(logs)
