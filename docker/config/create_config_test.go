@@ -40,8 +40,7 @@ func TestConfigBuilder(t *testing.T) {
 		Mount(mount3).
 		TimeLimit(3 * time.Second).
 		MemoryLimit(64).
-		CPUCount(6).
-		DiskSpace(64)
+		CPUCount(6)
 	containerConfig := configBuilder.Build()
 
 	log.Println(containerConfig)
