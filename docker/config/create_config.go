@@ -2,7 +2,6 @@ package config
 
 import (
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/docker/docker/api/types/container"
@@ -81,12 +80,13 @@ func (b *Builder) MemoryLimit(memoryLimit int) *Builder {
 	return b
 }
 
-// DiskSpace sets maximum disk space allocated for the container (in megabytes)
-func (b *Builder) DiskSpace(diskSpace int) *Builder {
-	b.Config.HostConfig.StorageOpt = make(map[string]string)
-	b.Config.HostConfig.StorageOpt["size"] = strconv.Itoa(diskSpace) + "MB"
-	return b
-}
+// FIXME: https://github.com/synalice/gobox/issues/10
+//// DiskSpace sets maximum disk space allocated for the container (in megabytes)
+//func (b *Builder) DiskSpace(diskSpace int) *Builder {
+//	b.Config.HostConfig.StorageOpt = make(map[string]string)
+//	b.Config.HostConfig.StorageOpt["size"] = strconv.Itoa(diskSpace) + "MB"
+//	return b
+//}
 
 // CPUCount sets max amount of CPU cycles for the container.
 // Be aware that it might collide with TimeLimit since 1 CPU cycle is approximately 1 second.
