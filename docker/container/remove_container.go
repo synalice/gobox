@@ -10,13 +10,15 @@ import (
 )
 
 // Remove deletes a specific container from host
-func Remove(controller *controller.Controller, containerID string) error {
-	err := controller.Cli.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{
-		RemoveVolumes: true,
-		Force:         true,
-	})
-	if err != nil {
-		return fmt.Errorf("error removing container: %w", err)
+func Remove(controller *controller.Controller, containerIDs ...string) error {
+	for _, containerID := range containerIDs {
+		err := controller.Cli.ContainerRemove(context.Background(), containerID, types.ContainerRemoveOptions{
+			RemoveVolumes: true,
+			Force:         true,
+		})
+		if err != nil {
+			return fmt.Errorf("error removing container: %w", err)
+		}
 	}
 
 	return nil
