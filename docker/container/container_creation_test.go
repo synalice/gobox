@@ -44,8 +44,7 @@ func TestOnLoad(t *testing.T) {
 				Mount(mount1).
 				TimeLimit(1 * time.Second).
 				MemoryLimit(64).
-				CPUCount(1000).
-				DiskSpace(1024)
+				CPUCount(1000)
 			newConfig := configBuilder.Build()
 
 			containerBuilder := container.NewContainerBuilder(ctrl)
