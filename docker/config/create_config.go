@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"time"
 
 	"github.com/docker/docker/api/types/container"
@@ -40,10 +39,11 @@ func NewConfigBuilder(controller *controller.Controller) *Builder {
 
 // Image sets image that container will use
 func (b *Builder) Image(image string) *Builder {
-	err := EnsureImage(b.controller, image)
-	if err != nil {
-		log.Println("couldn't pull an image from the dockerhub:", err)
-	}
+	// FIXME: https://github.com/synalice/gobox/issues/8#issuecomment-1152683742
+	//err := EnsureImage(b.controller, image)
+	//if err != nil {
+	//	log.Println("couldn't pull an image from the dockerhub:", err)
+	//}
 
 	b.Config.ContainerConfig.Image = image
 	return b
