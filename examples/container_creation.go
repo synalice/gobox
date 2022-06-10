@@ -52,6 +52,14 @@ func main() {
 	configBuilder := config.NewConfigBuilder(ctrl)
 	configBuilder.
 		// An image that the container will use.
+		//
+		// IMPORTANT! Make sure that an image you are trying to use
+		// actually exists on your machine. It will not be pulled
+		// from the registry automatically because this process heavily
+		// affects the performance.
+		//
+		// Read more about why this happens:
+		// https://github.com/synalice/gobox/issues/8#issuecomment-1152683742
 		Image("python").
 
 		// A command that will be executed when container starts.
