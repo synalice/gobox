@@ -75,7 +75,7 @@ func TestContainerLifecycle(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 
-	err = mount.CleanUp(ctrl, mount1, mount2)
+	err = mount.Remove(ctrl, mount1, mount2)
 	if err != nil {
 		t.Errorf("%v", err)
 	}

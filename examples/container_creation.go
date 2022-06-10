@@ -124,7 +124,7 @@ func main() {
 	}
 
 	// Remove volumes
-	err = mount.CleanUp(ctrl, mount1, mount2)
+	err = mount.Remove(ctrl, mount1, mount2)
 	if err != nil {
 		log.Println(err)
 	}

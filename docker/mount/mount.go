@@ -44,10 +44,10 @@ func validatePathToFolder(path string) error {
 	return nil
 }
 
-// CleanUp takes in an array of mounts and removes all volumes in them.
+// Remove takes in an array of mounts and removes all volumes in them.
 // Use this function after you've finished all the work and want to remove all
 // leftover volumes.
-func CleanUp(controller *controller.Controller, mounts ...Mount) error {
+func Remove(controller *controller.Controller, mounts ...Mount) error {
 	for _, mount := range mounts {
 		err := volume.Remove(controller, mount.Volume.Name)
 		if err != nil {

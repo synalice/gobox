@@ -82,7 +82,7 @@ func TestOnLoad(t *testing.T) {
 
 			fmt.Println(logs)
 
-			err = mount.CleanUp(ctrl, mount1)
+			err = mount.Remove(ctrl, mount1)
 			if err != nil {
 				t.Errorf("%v", err)
 			}

@@ -18,7 +18,7 @@ func TestNewMount(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 
-	err = mount.CleanUp(ctrl, myMount)
+	err = mount.Remove(ctrl, myMount)
 	if err != nil {
 		t.Errorf("%v", err)
 	}
