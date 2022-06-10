@@ -44,5 +44,10 @@ func TestConfigBuilder(t *testing.T) {
 		DiskSpace(64)
 	containerConfig := configBuilder.Build()
 
+	err = mount.Remove(ctrl, mount1, mount2, mount3)
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+
 	log.Println(containerConfig)
 }
