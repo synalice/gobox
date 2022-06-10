@@ -27,7 +27,7 @@ func TestOnLoad(t *testing.T) {
 		wg.Add(1)
 		go func(iter int) {
 			log.Println("Starting goroutine " + strconv.Itoa(iter))
-			mount1, err := mount.NewMount(ctrl, "", "/userFolder1")
+			mount1, err := mount.NewMount(ctrl, "", "/theFolder1")
 			if err != nil {
 				t.Errorf("%v", err)
 			}
@@ -40,7 +40,7 @@ func TestOnLoad(t *testing.T) {
 			configBuilder := config.NewConfigBuilder(ctrl)
 			configBuilder.
 				Image("python").
-				Cmd("python", "/userFolder1/main.py").
+				Cmd("python", "/theFolder1/main.py").
 				Mount(mount1).
 				TimeLimit(1 * time.Second).
 				MemoryLimit(64).

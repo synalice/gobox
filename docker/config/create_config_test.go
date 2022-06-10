@@ -16,17 +16,17 @@ func TestConfigBuilder(t *testing.T) {
 		t.Errorf("error creating new controller: %v", err)
 	}
 
-	mount1, err := mount.NewMount(ctrl, "", "/userFolder1")
+	mount1, err := mount.NewMount(ctrl, "", "/theFolder1")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
 
-	mount2, err := mount.NewMount(ctrl, "", "/userFolder2")
+	mount2, err := mount.NewMount(ctrl, "", "/theFolder2")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
 
-	mount3, err := mount.NewMount(ctrl, "", "/userFolder3")
+	mount3, err := mount.NewMount(ctrl, "", "/theFolder3")
 	if err != nil {
 		t.Errorf("%v", err)
 	}

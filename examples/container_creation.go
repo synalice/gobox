@@ -55,7 +55,7 @@ func main() {
 		Image("python").
 
 		// A command that will be executed when container starts.
-		Cmd("python", "/userFolder1/main.py").
+		Cmd("python", "/theFolder1/main.py").
 
 		// Mounting the mounts! We can set how many we want.
 		Mount(mount1).

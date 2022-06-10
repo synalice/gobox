@@ -37,7 +37,7 @@ func TestContainerLifecycle(t *testing.T) {
 	configBuilder := config.NewConfigBuilder(ctrl)
 	configBuilder.
 		Image("python").
-		Cmd("python", "/userFolder1/main.py").
+		Cmd("python", "/theFolder1/main.py").
 		Mount(mount1).
 		Mount(mount2).
 		TimeLimit(1 * time.Second).
