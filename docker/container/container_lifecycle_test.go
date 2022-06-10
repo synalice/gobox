@@ -19,24 +19,19 @@ func TestContainerLifecycle(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 
-	mount1, err := mount.NewMount(ctrl, "", "/userFolder1")
-	if err != nil {
-		t.Errorf("%v", err)
-	}
-
-	mount2, err := mount.NewMount(ctrl, "", "/userFolder2")
-	if err != nil {
-		t.Errorf("%v", err)
-	}
-
-	mount3, err := mount.NewMount(ctrl, "", "/userFolder3")
-	if err != nil {
-		t.Errorf("%v", err)
-	}
-
 	myFile := file.File{
 		Name: "main.py",
 		Body: "print(\"Hello, World!\")",
+	}
+
+	mount1, err := mount.NewMount(ctrl, "", "/theFolder1")
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+
+	mount2, err := mount.NewMount(ctrl, "", "/theFolder2")
+	if err != nil {
+		t.Errorf("%v", err)
 	}
 
 	configBuilder := config.NewConfigBuilder(ctrl)
@@ -45,11 +40,8 @@ func TestContainerLifecycle(t *testing.T) {
 		Cmd("python", "/userFolder1/main.py").
 		Mount(mount1).
 		Mount(mount2).
-		Mount(mount3).
 		TimeLimit(1 * time.Second).
-		MemoryLimit(64).
-		CPUCount(1000).
-		DiskSpace(1024)
+		MemoryLimit(64)
 	newConfig := configBuilder.Build()
 
 	containerBuilder := container.NewContainerBuilder(ctrl)
@@ -83,7 +75,7 @@ func TestContainerLifecycle(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 
-	err = mount.CleanUp(ctrl, mount1, mount2, mount3)
+	err = mount.CleanUp(ctrl, mount1, mount2)
 	if err != nil {
 		t.Errorf("%v", err)
 	}
