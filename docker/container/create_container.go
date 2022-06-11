@@ -3,6 +3,7 @@ package container
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/google/uuid"
@@ -100,6 +101,10 @@ func (b *Builder) setTimeLimit() *Builder {
 
 // generateUUIDName generates unique UUID name for each new container
 func (b *Builder) generateUUIDName() (containerName string) {
+	if strings.Contains(b.config.ContainerConfig.Image, ":") {
+		newImgName := strings.Replace(b.config.ContainerConfig.Image, ":", "-", -1)
+		return "gobox" + "-" + newImgName + "-" + uuid.NewString()
+	}
 	return "gobox" + "-" + b.config.ContainerConfig.Image + "-" + uuid.NewString()
 }
 
