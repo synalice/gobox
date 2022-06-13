@@ -21,8 +21,10 @@ func TestContainerLifecycle(t *testing.T) {
 
 	myFile := file.File{
 		Name: "main.py",
-		Body: `user = input("Enter name: ")
-print(f"Hello, {user}!")`,
+		Body: `
+user = input("Enter your name: ")
+print(f"Hello, {user}!")
+print("Have a great day!")`,
 	}
 
 	mount1, err := mount.NewMount(ctrl, "", "/theFolder1")
@@ -54,7 +56,7 @@ print(f"Hello, {user}!")`,
 		t.Errorf("%v", err)
 	}
 
-	err = container.Start(ctrl, builtContainer.ID, "John")
+	err = container.Start(ctrl, builtContainer, "John")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
@@ -66,7 +68,7 @@ print(f"Hello, {user}!")`,
 		t.Errorf("%v", err)
 	}
 
-	logs, err := container.GetLogs(ctrl, builtContainer.ID)
+	logs, err := container.GetLogs(ctrl, builtContainer)
 	if err != nil {
 		t.Errorf("%v", err)
 	}
