@@ -113,13 +113,11 @@ print("Have a great day!")`,
 	// Let's wait until the container finishes its work.
 	//
 	// One of the errors you might actually want to expect from this
-	// function is container.ErrorTimeout. If you get it - it means that
+	// function is `container.ErrorTimeout`. If you get it - it means that
 	// the container hasn't finished it's work in the allotted time and was
 	// killed.
 	_, err = container.Wait(ctrl, builtContainer.ID, builtContainer.TimeLimit)
-	if err == container.ErrorTimeout {
-		log.Println(err)
-	} else if err != nil {
+	if err != nil {
 		log.Println(err)
 	}
 
