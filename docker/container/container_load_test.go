@@ -57,7 +57,7 @@ func TestOnLoad(t *testing.T) {
 			}
 
 			log.Println("Starting container " + strconv.Itoa(iter))
-			err = container.Start(ctrl, builtContainer.ID)
+			err = container.Start(ctrl, builtContainer, "")
 			if err != nil {
 				t.Errorf("%v", err)
 			}
@@ -69,7 +69,7 @@ func TestOnLoad(t *testing.T) {
 				t.Errorf("%v", err)
 			}
 
-			logs, err := container.GetLogs(ctrl, builtContainer.ID)
+			logs, err := container.GetLogs(ctrl, builtContainer)
 			if err != nil {
 				t.Errorf("%v", err)
 			}

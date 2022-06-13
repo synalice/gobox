@@ -25,7 +25,10 @@ func main() {
 	// run.
 	myFile := file.File{
 		Name: "main.py",
-		Body: "print(\"Hello, World!\")",
+		Body: `
+user = input("Enter your name: ")
+print(f"Hello, {user}!")
+print("Have a great day!")`,
 	}
 
 	// Now, let's create a mount. It specifies where do we want to create
@@ -100,8 +103,9 @@ func main() {
 		log.Println(err)
 	}
 
-	// Let's start this container.
-	err = container.Start(ctrl, builtContainer.ID)
+	// Let's start this container. Leave `stdin` argument empty if you don't
+	// want to write anything in it.
+	err = container.Start(ctrl, builtContainer, "John")
 	if err != nil {
 		log.Println(err)
 	}
@@ -120,7 +124,7 @@ func main() {
 	}
 
 	// Let's get the logs from the container's stdout.
-	logs, err := container.GetLogs(ctrl, builtContainer.ID)
+	logs, err := container.GetLogs(ctrl, builtContainer)
 	if err != nil {
 		log.Println(err)
 	}

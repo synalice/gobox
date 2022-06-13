@@ -71,6 +71,11 @@ func (b *Builder) Build() (*Container, error) {
 
 	b.setTimeLimit()
 
+	b.container.Connection, err = attach(b.controller, b.container.ID)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't create container: %w", err)
+	}
+
 	return b.container, nil
 }
 
