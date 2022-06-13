@@ -100,8 +100,9 @@ func main() {
 		log.Println(err)
 	}
 
-	// Let's start this container.
-	err = container.Start(ctrl, builtContainer.ID)
+	// Let's start this container. Leave `stdin` argument empty if you don't
+	// want to write anything in it.
+	err = container.Start(ctrl, builtContainer.ID, "")
 	if err != nil {
 		log.Println(err)
 	}
