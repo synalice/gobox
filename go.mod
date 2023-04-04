@@ -3,7 +3,7 @@ module github.com/synalice/gobox
 go 1.18
 
 require (
-	github.com/docker/docker v20.10.16+incompatible
+	github.com/docker/docker v20.10.24+incompatible
 	github.com/google/uuid v1.3.0
 	github.com/opencontainers/image-spec v1.0.2
 )
